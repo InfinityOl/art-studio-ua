@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 const Hero = () => {
   return (
-    <section id="home" className="min-h-screen bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 relative overflow-hidden">
+    <section id="home" className="bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
@@ -50,52 +50,18 @@ const Hero = () => {
               className="flex flex-col sm:flex-row gap-4 mb-12"
             >
               <motion.button
+                onClick={() => {
+                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-white text-purple-600 px-8 py-4 rounded-full font-semibold text-lg flex items-center justify-center space-x-2 hover:shadow-2xl transition-all"
               >
                 <span>Замовити фотосесію</span>
                 <ArrowRight size={20} />
-              </motion.button>
+              </motion.button>              
               
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-purple-600 transition-all"
-              >
-                Переглянути портфоліо
-              </motion.button>
-            </motion.div>
-
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.8 }}
-              className="grid grid-cols-3 gap-8"
-            >
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Users className="w-6 h-6 mr-2" />
-                  <span className="text-3xl font-bold">500+</span>
-                </div>
-                <p className="text-white/80">Задоволених клієнтів</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Star className="w-6 h-6 mr-2" />
-                  <span className="text-3xl font-bold">5.0</span>
-                </div>
-                <p className="text-white/80">Рейтинг в Google</p>
-              </div>
-              <div className="text-center">
-                <div className="flex items-center justify-center mb-2">
-                  <Award className="w-6 h-6 mr-2" />
-                  <span className="text-3xl font-bold">3</span>
-                </div>
-                <p className="text-white/80">Роки досвіду</p>
-              </div>
-            </motion.div>
+            </motion.div>           
           </motion.div>
 
           <motion.div

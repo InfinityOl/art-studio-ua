@@ -1,15 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Award, Camera, Heart, Star, Clock, CheckCircle } from 'lucide-react';
+import { Camera, Heart, CheckCircle, Clock } from 'lucide-react';
 
 const About = () => {
-  const stats = [
-    { icon: Camera, number: '500+', label: 'Успішних проектів' },
-    { icon: Heart, number: '100%', label: 'Задоволених клієнтів' },
-    { icon: Award, number: '5', label: 'Нагород у галузі' },
-    { icon: Star, number: '4.9', label: 'Рейтинг у Google' }
-  ];
-
   const features = [
     'Професійне обладнання високої якості',
     'Досвідчена команда фотографів',
@@ -23,69 +16,14 @@ const About = () => {
     <section id="about" className="py-20 bg-gradient-to-br from-purple-50 to-pink-50">
       <div className="container mx-auto px-4">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Image Section - тепер ліворуч */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            className="order-2 lg:order-1"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-pink-600 to-violet-600 bg-clip-text text-transparent">
-              Про нашу студію
-            </h2>
-            
-            <div className="space-y-6 text-gray-600">
-              <p className="text-lg leading-relaxed">
-                <strong className="text-gray-800">PixelArt Studio</strong> — це сучасна фотостудія, 
-                яка спеціалізується на створенні неперевершених візуальних історій. Ми поєднуємо 
-                технічну майстерність з творчим баченням, щоб зафіксувати найважливіші моменти 
-                вашого життя.
-              </p>
-              
-              <p className="text-lg leading-relaxed">
-                Наша команда складається з досвідчених фотографів, які працюють з професійним 
-                обладнанням та завжди слідкують за останніми трендами у світі фотографії. 
-                Ми віримо, що кожен кадр має розповідати унікальну історію.
-              </p>
-              
-              <p className="text-lg leading-relaxed">
-                Від інтимних портретів до масштабних весільних церемоній — ми готові втілити 
-                будь-яку вашу ідею в життя з максимальною увагою до деталей та професіоналізмом.
-              </p>
-            </div>
-
-            <div className="mt-8 space-y-4">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  viewport={{ once: true }}
-                  className="flex items-center space-x-3"
-                >
-                  <CheckCircle className="w-5 h-5 text-green-500" />
-                  <span className="text-gray-700">{feature}</span>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="mt-8 bg-gradient-to-r from-pink-500 to-violet-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-xl transition-all"
-            >
-              Зв'язатися з нами
-            </motion.button>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            {/* Main Image */}
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden">
                 <img
@@ -119,27 +57,66 @@ const About = () => {
                 </div>
               </motion.div>
             </div>
+          </motion.div>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-6">
-              {stats.map((stat, index) => (
+          {/* Text Section - тепер праворуч */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="order-1 lg:order-2"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-pink-600 to-violet-600 bg-clip-text text-transparent">
+              Про нашу студію
+            </h2>
+            
+            <div className="space-y-6 text-gray-600">
+              <p className="text-lg leading-relaxed">
+                <strong className="text-gray-800">PixelArt Studio</strong> — це молода та амбітна фотостудія, 
+                яка спеціалізується на створенні неперевершених візуальних історій. Ми поєднуємо 
+                свіжий погляд на фотографію з сучасними технологіями, щоб зафіксувати найважливіші 
+                моменти вашого життя.
+              </p>
+              
+              <p className="text-lg leading-relaxed">
+                Попри те, що наша студія молода, наша команда складається з талановитих фотографів, 
+                які працюють з професійним обладнанням та завжди слідкують за останніми трендами 
+                у світі фотографії. Ми віримо, що кожен кадр має розповідати унікальну історію.
+              </p>
+              
+              <p className="text-lg leading-relaxed">
+                Від інтимних портретів до масштабних весільних церемоній — ми готові втілити 
+                будь-яку вашу ідею в життя з максимальною увагою до деталей та ентузіазмом молодої команди.
+              </p>
+            </div>
+
+            <div className="mt-8 space-y-4">
+              {features.map((feature, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
                   viewport={{ once: true }}
-                  whileHover={{ scale: 1.05 }}
-                  className="bg-white rounded-2xl p-6 text-center shadow-lg hover:shadow-xl transition-all"
+                  className="flex items-center space-x-3"
                 >
-                  <div className="w-12 h-12 bg-gradient-to-r from-pink-100 to-violet-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <stat.icon className="w-6 h-6 text-violet-600" />
-                  </div>
-                  <div className="text-3xl font-bold text-gray-800 mb-2">{stat.number}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-gray-700">{feature}</span>
                 </motion.div>
               ))}
             </div>
+
+            <motion.button
+              onClick={() => {
+                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="mt-8 bg-gradient-to-r from-pink-500 to-violet-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-xl transition-all"
+            >
+              Зв'язатися з нами
+            </motion.button>
           </motion.div>
         </div>
       </div>
@@ -147,4 +124,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default About

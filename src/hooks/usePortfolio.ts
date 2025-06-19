@@ -49,14 +49,23 @@ export const usePortfolio = () => {
   const addPortfolioItem = async (item: Omit<PortfolioItem, 'id' | 'createdAt' | 'updatedAt'>, file: File) => {
     try {
       const imageUrl = await uploadImage(file);
-      const docRef = await addDoc(collection(db, 'portfolio'), {
+      const newItem = {
         ...item,
         imageUrl,
         createdAt: new Date(),
         updatedAt: new Date(),
-      });
+      };
       
-      await fetchPortfolio();
+      const docRef = await addDoc(collection(db, 'portfolio'), newItem);
+      
+      // Immediately update local state without refetching
+      const portfolioItem: PortfolioItem = {
+        id: docRef.id,
+        ...newItem,
+      };
+      
+      setPortfolioItems(prev => [portfolioItem, ...prev]);
+      
       return docRef.id;
     } catch (error) {
       console.error('Error adding portfolio item:', error);
@@ -74,7 +83,15 @@ export const usePortfolio = () => {
       }
       
       await updateDoc(doc(db, 'portfolio', id), updateData);
-      await fetchPortfolio();
+      
+      // Immediately update local state
+      setPortfolioItems(prev => 
+        prev.map(item => 
+          item.id === id 
+            ? { ...item, ...updateData }
+            : item
+        )
+      );
     } catch (error) {
       console.error('Error updating portfolio item:', error);
       throw error;
@@ -89,7 +106,9 @@ export const usePortfolio = () => {
       
       // Delete document from Firestore
       await deleteDoc(doc(db, 'portfolio', id));
-      await fetchPortfolio();
+      
+      // Immediately update local state
+      setPortfolioItems(prev => prev.filter(item => item.id !== id));
     } catch (error) {
       console.error('Error deleting portfolio item:', error);
       throw error;

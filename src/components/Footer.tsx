@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Phone, Mail, MapPin, Instagram, Facebook, Youtube, Heart } from 'lucide-react';
+import { Camera, Phone, Instagram, Facebook, Youtube, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Footer = () => {
@@ -125,21 +125,7 @@ const Footer = () => {
                   <p className="text-gray-300">+38 (067) 123-45-67</p>
                   <p className="text-gray-300">+38 (063) 987-65-43</p>
                 </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <Mail className="w-5 h-5 text-violet-400 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="text-gray-300">info@pixelart.studio</p>
-                  <p className="text-gray-300">booking@pixelart.studio</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-pink-400 mt-1 flex-shrink-0" />
-                <div>
-                  <p className="text-gray-300">вул. Хрещатик, 15</p>
-                  <p className="text-gray-300">м. Київ, Україна</p>
-                </div>
-              </div>
+              </div>                            
             </div>
           </motion.div>
         </div>
@@ -154,7 +140,7 @@ const Footer = () => {
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-center md:text-left">
-              © 2024 PixelArt Studio. Всі права захищені.
+              © {new Date().getFullYear()} PixelArt Studio. Всі права захищені.
             </p>
             <div className="flex items-center space-x-1 text-gray-400">
               <span>Створено з</span>
