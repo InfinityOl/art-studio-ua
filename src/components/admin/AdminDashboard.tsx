@@ -54,9 +54,9 @@ const AdminDashboard: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-400 to-violet-400 bg-clip-text text-transparent">
+            <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 to-violet-400 bg-clip-text text-transparent">
               Адмін-панель
             </h1>
             <p className="text-gray-300 mt-2">Управління портфоліо студії</p>
@@ -69,12 +69,12 @@ const AdminDashboard: React.FC = () => {
               </div>
             )}
           </div>
-          <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:space-x-4">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowForm(true)}
-              className="bg-gradient-to-r from-pink-500 to-violet-600 px-6 py-3 rounded-xl font-semibold flex items-center space-x-2"
+              className="bg-gradient-to-r from-pink-500 to-violet-600 px-4 md:px-6 py-3 rounded-xl font-semibold flex items-center justify-center space-x-2"
             >
               <Plus className="w-5 h-5" />
               <span>Додати роботу</span>
@@ -83,7 +83,7 @@ const AdminDashboard: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 px-6 py-3 rounded-xl font-semibold flex items-center space-x-2"
+              className="bg-red-500 hover:bg-red-600 px-4 md:px-6 py-3 rounded-xl font-semibold flex items-center justify-center space-x-2"
             >
               <LogOut className="w-5 h-5" />
               <span>Вийти</span>
@@ -92,7 +92,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6 mb-8">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
             <div className="text-3xl font-bold text-pink-400 mb-2">{portfolioItems.length}</div>
             <div className="text-gray-300">Всього робіт</div>
@@ -108,7 +108,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Portfolio Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
           {portfolioItems.map((item) => (
             <motion.div
               key={item.id}

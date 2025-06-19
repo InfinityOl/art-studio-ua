@@ -24,7 +24,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
             >
               Створюємо
               <span className="block bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-transparent">
@@ -37,7 +37,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-xl md:text-2xl mb-8 text-white/90 leading-relaxed"
+              className="text-lg sm:text-xl md:text-2xl mb-6 md:mb-8 text-white/90 leading-relaxed"
             >
               Професійна фотостудія з сучасним обладнанням та творчим підходом. 
               Ми перетворюємо ваші моменти на неперевершені спогади.

@@ -121,8 +121,8 @@ const PortfolioDetail: React.FC = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+      <div className="container mx-auto px-4 py-4 md:py-8">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-12 items-start">
           {/* Image Gallery Section */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -178,7 +178,7 @@ const PortfolioDetail: React.FC = () => {
 
             {/* Thumbnails (if multiple images) */}
             {images.length > 1 && (
-              <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
                 {images.map((image, index) => (
                   <motion.div
                     key={index}
@@ -204,20 +204,22 @@ const PortfolioDetail: React.FC = () => {
             )}
 
             {/* Portfolio Navigation Buttons */}
-            <div className="flex justify-between pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:justify-between pt-4">
               <button
                 onClick={() => navigateToItem('prev')}
-                className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition-all"
+                className="flex items-center justify-center space-x-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition-all"
               >
                 <ChevronLeft className="w-4 h-4" />
-                <span>Попередня робота</span>
+                <span className="hidden sm:inline">Попередня робота</span>
+                <span className="sm:hidden">Попередня</span>
               </button>
               
               <button
                 onClick={() => navigateToItem('next')}
-                className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition-all"
+                className="flex items-center justify-center space-x-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl transition-all"
               >
-                <span>Наступна робота</span>
+                <span className="hidden sm:inline">Наступна робота</span>
+                <span className="sm:hidden">Наступна</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -246,7 +248,7 @@ const PortfolioDetail: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-4"
+                className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-4"
               >
                 {currentItem.title}
               </motion.h1>
@@ -255,7 +257,7 @@ const PortfolioDetail: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="flex items-center space-x-4 text-gray-400"
+                className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 text-gray-400"
               >
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4" />
@@ -318,16 +320,16 @@ const PortfolioDetail: React.FC = () => {
               <p className="text-gray-300 mb-4">
                 Замовте подібну фотосесію та створіть свої неповторні спогади разом з нами!
               </p>
-              <div className="flex space-x-3">
+              <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
                 <Link
                   to="/#contact"
-                  className="inline-flex items-center bg-gradient-to-r from-pink-500 to-violet-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
+                  className="inline-flex items-center justify-center bg-gradient-to-r from-pink-500 to-violet-600 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
                 >
                   Замовити фотосесію
                 </Link>
                 <Link
                   to="/#portfolio"
-                  className="inline-flex items-center bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold border border-white/20 transition-all"
+                  className="inline-flex items-center justify-center bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold border border-white/20 transition-all"
                 >
                   Все портфоліо
                 </Link>

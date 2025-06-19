@@ -39,10 +39,10 @@ const Portfolio = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-pink-600 to-violet-600 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-pink-600 to-violet-600 bg-clip-text text-transparent">
             Наше портфоліо
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
             Переглянь наші найкращі роботи та відчуй магію професійної фотографії
           </p>
         </motion.div>
@@ -76,7 +76,7 @@ const Portfolio = () => {
         {filteredItems.length > 0 ? (
           <motion.div
             layout
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
           >
             <AnimatePresence>
               {filteredItems.map((item) => (

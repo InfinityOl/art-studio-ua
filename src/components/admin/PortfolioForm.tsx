@@ -138,14 +138,14 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-2 sm:p-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 w-full max-w-4xl border border-white/20 max-h-[90vh] overflow-y-auto"
+        className="bg-white/10 backdrop-blur-lg rounded-3xl p-4 sm:p-6 md:p-8 w-full max-w-4xl border border-white/20 max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-white">
+        <div className="flex justify-between items-center mb-4 md:mb-6">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white">
             {item ? 'Редагувати роботу' : 'Додати нову роботу'}
           </h2>
           <button
@@ -163,7 +163,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess 
               <label className="block text-sm font-medium text-gray-300 mb-4">
                 Поточні зображення
               </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 mb-4">
                 {existingImages.map((imageUrl, index) => (
                   <motion.div
                     key={imageUrl}
@@ -202,7 +202,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess 
               <label className="block text-sm font-medium text-gray-300 mb-4">
                 Нові зображення
               </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4 mb-4">
                 {previewUrls.map((previewUrl, index) => (
                   <motion.div
                     key={index}
@@ -328,7 +328,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess 
           )}
 
           {/* Buttons */}
-          <div className="flex space-x-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:space-x-4">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -343,7 +343,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess 
               whileTap={{ scale: 0.98 }}
               type="button"
               onClick={onClose}
-              className="px-8 py-3 bg-white/10 text-white rounded-xl font-semibold hover:bg-white/20 transition-colors"
+              className="sm:px-8 py-3 bg-white/10 text-white rounded-xl font-semibold hover:bg-white/20 transition-colors"
             >
               Скасувати
             </motion.button>

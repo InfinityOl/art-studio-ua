@@ -15,7 +15,7 @@ const About = () => {
   return (
     <section id="about" className="py-20 bg-gradient-to-br from-purple-50 to-pink-50">
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Image Section - тепер ліворуч */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -67,7 +67,7 @@ const About = () => {
             viewport={{ once: true }}
             className="order-1 lg:order-2"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-pink-600 to-violet-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 md:mb-8 bg-gradient-to-r from-pink-600 to-violet-600 bg-clip-text text-transparent">
               Про нашу студію
             </h2>
             
