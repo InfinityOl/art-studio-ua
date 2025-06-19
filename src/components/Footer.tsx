@@ -100,6 +100,9 @@ const Footer = () => {
               {services.map((service, index) => (
                 <li key={index}>
                   <motion.span
+                    onClick={() => {
+                      document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
                     whileHover={{ x: 5 }}
                     className="text-gray-300 hover:text-violet-400 transition-colors cursor-pointer block"
                   >

@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Eye, Heart, Share2 } from 'lucide-react';
+import { Eye, Heart, Share2, ArrowUpRight } from 'lucide-react';
 import { usePortfolio } from '../hooks/usePortfolio';
+import { useToast } from '../hooks/useToast';
+import Toast from './Toast';
 
 const Portfolio = () => {
   const { portfolioItems, loading } = usePortfolio();
+  const { toast, showToast, hideToast } = useToast();
   const [activeCategory, setActiveCategory] = useState('Всі');
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const categories = ['Всі', 'Портрети', 'Весілля', 'Сім\'я', 'Fashion', 'Корпоратив'];
 
@@ -85,43 +88,77 @@ const Portfolio = () => {
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.4 }}
                   whileHover={{ y: -10 }}
-                  className="group relative overflow-hidden rounded-3xl cursor-pointer"
-                  onClick={() => setSelectedImage(item.imageUrl)}
+                  className="group relative overflow-hidden rounded-3xl"
                 >
-                  <div className="aspect-square">
-                    <img
-                      src={item.imageUrl}
-                      alt={item.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  </div>
-                  
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-6 left-6 right-6">
-                      <h3 className="text-white font-semibold text-lg mb-2">{item.title}</h3>
-                      <p className="text-white/80 text-sm">{item.category}</p>
-                      {item.description && (
-                        <p className="text-white/70 text-xs mt-1 line-clamp-2">{item.description}</p>
+                  <Link to={`/portfolio/${item.id}`} className="block">
+                    <div className="aspect-square relative">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      {/* Image count indicator */}
+                      {item.images && item.images.length > 1 && (
+                        <div className="absolute top-4 left-4 bg-gradient-to-r from-pink-500 to-violet-600 text-white text-sm px-3 py-1 rounded-full font-medium shadow-lg">
+                          {item.images.length} фото
+                        </div>
                       )}
                     </div>
                     
-                    <div className="absolute top-6 right-6 flex space-x-2">
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
-                      >
-                        <Eye size={18} />
-                      </motion.button>                      
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
-                      >
-                        <Share2 size={18} />
-                      </motion.button>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="absolute bottom-6 left-6 right-6">
+                        <h3 className="text-white font-semibold text-lg mb-2">{item.title}</h3>
+                        <p className="text-white/80 text-sm">{item.category}</p>
+                        {item.description && (
+                          <p className="text-white/70 text-xs mt-1 line-clamp-2">{item.description}</p>
+                        )}
+                      </div>
+                      
+                      <div className="absolute top-6 right-6 flex space-x-2">
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
+                        >
+                          <ArrowUpRight size={18} />
+                        </motion.div>
+                      </div>
+                      
+                      {/* Bottom action buttons */}
+                      <div className="absolute bottom-6 right-6 flex space-x-2">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
+                        >
+                          <Heart size={14} />
+                        </motion.button>
+                        
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={async (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            try {
+                              await navigator.clipboard.writeText(`${window.location.origin}/portfolio/${item.id}`);
+                              showToast('Посилання скопійовано!');
+                            } catch (error) {
+                              console.error('Помилка копіювання:', error);
+                              showToast('Помилка копіювання', 'error');
+                            }
+                          }}
+                          className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
+                        >
+                          <Share2 size={14} />
+                        </motion.button>
+                      </div>
                     </div>
-                  </div>
+                  </Link>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -137,28 +174,13 @@ const Portfolio = () => {
           </div>
         )}
 
-        {/* Image Modal */}
-        <AnimatePresence>
-          {selectedImage && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
-              onClick={() => setSelectedImage(null)}
-            >
-              <motion.img
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.8 }}
-                src={selectedImage}
-                alt="Portfolio item"
-                className="max-w-full max-h-full object-contain rounded-lg"
-                onClick={(e) => e.stopPropagation()}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Toast Notification */}
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          isVisible={toast.isVisible}
+          onClose={hideToast}
+        />
       </div>
     </section>
   );

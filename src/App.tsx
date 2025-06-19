@@ -8,12 +8,14 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import AdminRoute from './components/admin/AdminRoute';
+import PortfolioDetail from './components/PortfolioDetail';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/admin" element={<AdminRoute />} />
+        <Route path="/portfolio/:id" element={<PortfolioDetail />} />
         <Route path="/" element={
           <div className="min-h-screen">
             <Header />

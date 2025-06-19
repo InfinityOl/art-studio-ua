@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { X, Upload, Image as ImageIcon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Upload, Image as ImageIcon, Trash2, Plus } from 'lucide-react';
 import { usePortfolio } from '../../hooks/usePortfolio';
 import { PortfolioItem } from '../../types/portfolio';
 
@@ -11,14 +11,15 @@ interface PortfolioFormProps {
 }
 
 const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess }) => {
-  const { addPortfolioItem, updatePortfolioItem } = usePortfolio();
+  const { addPortfolioItem, updatePortfolioItem, deleteImageFromPortfolio } = usePortfolio();
   const [formData, setFormData] = useState({
     title: item?.title || '',
     category: item?.category || 'Портрети',
     description: item?.description || ''
   });
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>(item?.imageUrl || '');
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>(item?.images || []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -26,35 +27,76 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess 
   const categories = ['Портрети', 'Весілля', 'Сім\'я', 'Fashion', 'Корпоратив'];
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        setError('Файл занадто великий. Максимальний розмір: 5MB');
+    const files = Array.from(e.target.files || []);
+    
+    if (files.length === 0) return;
+
+    // Validate files
+    const validFiles: File[] = [];
+    const errors: string[] = [];
+
+    files.forEach((file, index) => {
+      if (file.size > 5 * 1024 * 1024) {
+        errors.push(`Файл ${index + 1} занадто великий (макс. 5MB)`);
         return;
       }
       
       if (!file.type.startsWith('image/')) {
-        setError('Будь ласка, оберіть файл зображення');
+        errors.push(`Файл ${index + 1} не є зображенням`);
         return;
       }
 
-      setSelectedFile(file);
-      setError('');
-      
-      // Create preview
+      validFiles.push(file);
+    });
+
+    if (errors.length > 0) {
+      setError(errors.join(', '));
+      return;
+    }
+
+    setError('');
+    setSelectedFiles(prev => [...prev, ...validFiles]);
+
+    // Create previews for new files
+    validFiles.forEach(file => {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setPreviewUrl(e.target?.result as string);
+        setPreviewUrls(prev => [...prev, e.target?.result as string]);
       };
       reader.readAsDataURL(file);
+    });
+  };
+
+  const removeNewImage = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    setPreviewUrls(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const removeExistingImage = async (imageUrl: string) => {
+    if (!item) return;
+    
+    if (window.confirm('Ви впевнені, що хочете видалити це зображення?')) {
+      try {
+        await deleteImageFromPortfolio(item.id, imageUrl);
+        setExistingImages(prev => prev.filter(img => img !== imageUrl));
+      } catch (error) {
+        setError('Помилка при видаленні зображення');
+      }
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!item && !selectedFile) {
-      setError('Будь ласка, оберіть зображення');
+    const totalImages = existingImages.length + selectedFiles.length;
+    
+    if (!item && selectedFiles.length === 0) {
+      setError('Будь ласка, оберіть хоча б одне зображення');
+      return;
+    }
+
+    if (totalImages === 0) {
+      setError('Роботa повинна мати хоча б одне зображення');
       return;
     }
 
@@ -68,11 +110,15 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess 
 
     try {
       if (item) {
-        // Update existing item
-        await updatePortfolioItem(item.id, formData, selectedFile || undefined);
+        // Update existing item - only add new files
+        if (selectedFiles.length > 0) {
+          await updatePortfolioItem(item.id, formData, selectedFiles);
+        } else {
+          await updatePortfolioItem(item.id, formData);
+        }
       } else {
         // Add new item
-        await addPortfolioItem(formData, selectedFile!);
+        await addPortfolioItem(formData, selectedFiles);
       }
       
       onSuccess();
@@ -96,7 +142,7 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess 
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 w-full max-w-2xl border border-white/20 max-h-[90vh] overflow-y-auto"
+        className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 w-full max-w-4xl border border-white/20 max-h-[90vh] overflow-y-auto"
       >
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-white">
@@ -111,38 +157,110 @@ const PortfolioForm: React.FC<PortfolioFormProps> = ({ item, onClose, onSuccess 
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Existing Images (for editing) */}
+          {item && existingImages.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-4">
+                Поточні зображення
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
+                {existingImages.map((imageUrl, index) => (
+                  <motion.div
+                    key={imageUrl}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="relative group bg-white/5 rounded-xl overflow-hidden"
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={`Existing ${index + 1}`}
+                      className="w-full h-32 object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <button
+                        type="button"
+                        onClick={() => removeExistingImage(imageUrl)}
+                        className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    {index === 0 && (
+                      <div className="absolute top-2 left-2 bg-gradient-to-r from-pink-500 to-violet-600 text-white text-xs px-2 py-1 rounded-full">
+                        Головна
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* New Images Preview */}
+          {previewUrls.length > 0 && (
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-4">
+                Нові зображення
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4">
+                {previewUrls.map((previewUrl, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="relative group bg-white/5 rounded-xl overflow-hidden"
+                  >
+                    <img
+                      src={previewUrl}
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-32 object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <button
+                        type="button"
+                        onClick={() => removeNewImage(index)}
+                        className="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    {existingImages.length === 0 && index === 0 && (
+                      <div className="absolute top-2 left-2 bg-gradient-to-r from-pink-500 to-violet-600 text-white text-xs px-2 py-1 rounded-full">
+                        Головна
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Image Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Зображення {!item && '*'}
+              {item ? 'Додати ще зображення' : 'Зображення *'}
             </label>
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-white/30 rounded-xl p-8 text-center cursor-pointer hover:border-pink-500 transition-colors"
+              className="border-2 border-dashed border-white/30 rounded-xl p-6 text-center cursor-pointer hover:border-pink-500 transition-colors"
             >
-              {previewUrl ? (
-                <div className="relative">
-                  <img
-                    src={previewUrl}
-                    alt="Preview"
-                    className="w-full h-48 object-cover rounded-lg"
-                  />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                    <Upload className="w-8 h-8 text-white" />
-                  </div>
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-pink-500 to-violet-600 rounded-xl flex items-center justify-center mb-4">
+                  <Plus className="w-8 h-8 text-white" />
                 </div>
-              ) : (
-                <div>
-                  <ImageIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-300 mb-2">Натисніть для вибору зображення</p>
-                  <p className="text-sm text-gray-400">PNG, JPG до 5MB</p>
-                </div>
-              )}
+                <p className="text-gray-300 mb-2">
+                  {item ? 'Додати ще зображення' : 'Натисніть для вибору зображень'}
+                </p>
+                <p className="text-sm text-gray-400">
+                  Можна вибрати кілька файлів. PNG, JPG до 5MB кожен
+                </p>
+              </div>
             </div>
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
+              multiple
               onChange={handleFileSelect}
               className="hidden"
             />

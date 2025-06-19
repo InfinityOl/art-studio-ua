@@ -105,7 +105,7 @@ const Services = () => {
             <motion.div
               key={index}
               variants={itemVariants}
-              whileHover={{ y: -10, scale: 1.02 }}
+              whileHover={{ y: -10, scale: 1.02 }}              
               className="bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100"
             >
               <div className={`w-16 h-16 bg-gradient-to-r ${service.gradient} rounded-2xl flex items-center justify-center mb-6`}>
@@ -129,13 +129,16 @@ const Services = () => {
                 </ul>
               </div>
               
-              <motion.button
+              {/* <motion.button
+                onClick={() => {
+                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={`w-full bg-gradient-to-r ${service.gradient} text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all`}
               >
                 Замовити зйомку
-              </motion.button>
+              </motion.button> */}
             </motion.div>
           ))}
         </motion.div>
